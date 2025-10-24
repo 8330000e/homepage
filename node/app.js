@@ -1,0 +1,35 @@
+const express = require("express");
+const nunjucks = require("nunjucks");
+
+const app = express();
+app.set('view engine', 'html');
+
+//View Enging 설정
+nunjucks.configure('views', {
+    express: app,
+    watch: true
+});
+
+//post 데이터 받기
+app.use(express.urlencoded({
+        extended: true
+}));
+
+//정적파일 설정
+app.use('/assets', express.static(__dirname + '/views/assets'));
+
+//Routing
+indexRouter = require('./routers/home');
+
+app.use('/', indexRouter.router);
+
+//404 Not found 
+app.use((req, res)=>{ 
+    res.status(404).send('404 오류');
+});
+
+app.listen(
+    80, () => {
+        console.log(80, '번에서 express 동작 중');
+    }
+);
